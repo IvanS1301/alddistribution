@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useParams } from 'react-router-dom';
 import { useUsersContext } from "../../hooks/useUsersContext";
 import { Container, Typography, Box, Paper, Modal, Backdrop, Fade } from '@mui/material';
-import EditUserLG from '../../pages/profile/EditUserLG'
+import EditUserLG from '../../pages/profile/EditUserLG';
 import moment from 'moment';
 
 // Function to shorten ObjectId
@@ -20,7 +20,11 @@ const ViewUserLG = () => {
     // Find the userlg with the specified ID
     const userlg = userlgs.find(userlg => userlg._id === id);
 
-    const formattedBirthday = moment(userlg.birthday).format('MMMM Do, YYYY');
+    if (!userlg) {
+        return <div>Loading...</div>;
+    }
+
+    const formattedBirthday = userlg.birthday ? moment(userlg.birthday).format('YYYY-MM-DD') : '';
 
     const handleOpenModal = () => {
         setOpenModal(true);
