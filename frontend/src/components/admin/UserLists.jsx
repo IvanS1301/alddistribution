@@ -10,7 +10,7 @@ import moment from 'moment'
 import EditUserInfo from '../../pages/profile/EditUserInfo';
 import ReadUserInfo from '../../pages/profile/ReadUserInfo';
 
-const UserLists = ({ userlgs }) => {
+const UserLists = ({ userlgs, onUserUpdate }) => {
   const { dispatch } = useUsersContext();
   const { userLG } = useAuthContext();
   const [selectedRows, setSelectedRows] = useState([]);
@@ -56,6 +56,7 @@ const UserLists = ({ userlgs }) => {
         dispatch({ type: "DELETE_USER", payload: json });
         setSnackbarMessage("User Deleted Successfully!");
         setSnackbarOpen(true);
+        onUserUpdate();
       }
     } catch (error) {
       setErrorDelete('Error deleting user.'); // Set delete error
@@ -207,6 +208,7 @@ const UserLists = ({ userlgs }) => {
           "& .MuiDataGrid-cell": {
             borderBottom: "none",
             color: "#e0e0e0",
+            borderTop: "1px solid #525252",
           },
           "& .name-column--cell": {
             color: "#94e2cd",
@@ -215,11 +217,11 @@ const UserLists = ({ userlgs }) => {
             backgroundColor: "#3e4396",
             borderBottom: "none",
             color: "#e0e0e0",
-            fontSize: "18px"
+            fontSize: "18px",
           },
           "& .MuiDataGrid-virtualScroller": {
             backgroundColor: "#101624",
-            fontSize: "17px"
+            fontSize: "17px",
           },
           "& .MuiDataGrid-headerContainer": {
             borderTop: "none",
@@ -274,7 +276,7 @@ const UserLists = ({ userlgs }) => {
             p: 4,
           }}
         >
-          <EditUserInfo userId={selectedUserId} />
+          {selectedUserId && <EditUserInfo userId={selectedUserId} onUserUpdate={onUserUpdate} />}
         </Box>
       </Modal>
       <Modal
@@ -344,8 +346,6 @@ const UserLists = ({ userlgs }) => {
             width: '80%',
             maxHeight: '80%',
             overflow: 'auto',
-
-
           }}
         >
           {selectedUserId && <ReadUserInfo userId={selectedUserId} />}
