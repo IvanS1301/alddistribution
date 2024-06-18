@@ -20,8 +20,6 @@ const ViewProfile = () => {
     // Find the userlg with the specified ID
     const userlg = userlgs.find(userlg => userlg._id === id);
 
-
-
     const formattedBirthday = moment(userlg.birthday).format('MMMM Do, YYYY');
 
     const handleOpenModal = () => {
@@ -34,7 +32,7 @@ const ViewProfile = () => {
 
     return (
         <Container>
-            <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+            <Box display="flex" justifyContent="center" alignItems="center" minHeight="90vh">
                 <Paper elevation={3} sx={{ padding: '50px', borderRadius: 6, boxShadow: '1px 1px 8px rgba(0, 0, 0, 0.065)', backgroundColor: '#101624', maxWidth: '500px', width: '100%' }}>
                     <Box display="flex" flexDirection="column" alignItems="center">
                         <Box mb={4}>
