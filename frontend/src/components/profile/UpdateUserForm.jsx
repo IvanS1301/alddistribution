@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react'
-import { useUsersContext } from "../../hooks/useUsersContext"
-import { useAuthContext } from '../../hooks/useAuthContext'
-import { Box, Button, TextField, Select, MenuItem, FormControl, InputLabel, CircularProgress, Modal } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { useUsersContext } from "../../hooks/useUsersContext";
+import { useAuthContext } from '../../hooks/useAuthContext';
+import { Box, Button, TextField, Select, MenuItem, FormControl, InputLabel, CircularProgress, Modal, Typography } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import moment from 'moment'; // Import moment for date handling
+import moment from 'moment';
 
-const UpdateUserForm = ({ userId }) => {
-  const { userlgs, dispatch } = useUsersContext()
-  const { userLG } = useAuthContext()
+const UpdateUserForm = ({ userId, onUserUpdate }) => {
+  const { userlgs, dispatch } = useUsersContext();
+  const { userLG } = useAuthContext();
 
   const [userData, setUserData] = useState({
     name: '',
@@ -17,63 +17,69 @@ const UpdateUserForm = ({ userId }) => {
     number: '',
     homeaddress: '',
     gender: ''
-  })
-  const [loading, setLoading] = useState(false); // State for loading indicator
-  const [error, setError] = useState(null)
-  const [openSuccessModal, setOpenSuccessModal] = useState(false); // State for success modal
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [openSuccessModal, setOpenSuccessModal] = useState(false);
 
   useEffect(() => {
-    // Fetch the user details based on the ID
-    const userlg = userlgs.find(userlg => userlg._id === userId)
+    const userlg = userlgs.find(userlg => userlg._id === userId);
     if (userlg) {
       setUserData({
         name: userlg.name || '',
         email: userlg.email || '',
         role: userlg.role || '',
-        birthday: userlg.birthday ? moment(userlg.birthday).format('YYYY-MM-DD') : '', // Format the date
+        birthday: userlg.birthday ? moment(userlg.birthday).format('YYYY-MM-DD') : '',
         number: userlg.number || '',
         homeaddress: userlg.homeaddress || '',
         gender: userlg.gender || ''
-      })
+      });
     }
-  }, [userId, userlgs])
+  }, [userId, userlgs]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setUserData(prevData => ({
       ...prevData,
       [name]: value
-    }))
-  }
+    }));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true); // Start loading
+    e.preventDefault();
+    setLoading(true);
 
-    // Send the updated user data to the backend for updating
-    const response = await fetch(`/api/userLG/${userId}`, {
-      method: 'PATCH',
-      body: JSON.stringify(userData),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${userLG.token}`
+    try {
+      const response = await fetch(`/api/userLG/${userId}`, {
+        method: 'PATCH',
+        body: JSON.stringify(userData),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${userLG.token}`
+        }
+      });
+
+      const json = await response.json();
+
+      setLoading(false);
+
+      if (!response.ok) {
+        setError(json.error);
+      } else {
+        setError(null);
+        setOpenSuccessModal(true);
+        dispatch({ type: 'UPDATE_USER', payload: json });
+        // Delay the execution of onUserUpdate to show the modal first
+        setTimeout(() => {
+          setOpenSuccessModal(false);
+          onUserUpdate();
+        }, 2000); // 2 seconds delay
       }
-    })
-    const json = await response.json()
-
-    setLoading(false); // Stop loading
-
-    if (!response.ok) {
-      setError(json.error)
+    } catch (error) {
+      setLoading(false);
+      setError('Something went wrong');
     }
-    if (response.ok) {
-      setError(null)
-      setUserData("")
-      setOpenSuccessModal(true);
-      // Update the user in the local state
-      dispatch({ type: 'UPDATE_USER', payload: json })
-    }
-  }
+  };
 
   const handleCloseSuccessModal = () => {
     setOpenSuccessModal(false);
@@ -81,6 +87,8 @@ const UpdateUserForm = ({ userId }) => {
 
   return (
     <Box
+      component="form"
+      onSubmit={handleSubmit}
       sx={{
         position: 'absolute',
         top: '50%',
@@ -93,84 +101,82 @@ const UpdateUserForm = ({ userId }) => {
         p: 4,
       }}
     >
-      <form onSubmit={handleSubmit}>
-        <div>Update Profile</div>
-        <TextField
-          fullWidth
-          label="Name"
-          name="name"
-          value={userData.name}
+      <Typography variant="h5" component="div">Update Profile</Typography>
+      <TextField
+        fullWidth
+        label="Name"
+        name="name"
+        value={userData.name}
+        onChange={handleChange}
+        margin="normal"
+      />
+      <TextField
+        fullWidth
+        label="Email"
+        name="email"
+        value={userData.email}
+        onChange={handleChange}
+        margin="normal"
+      />
+      <FormControl fullWidth margin="normal">
+        <InputLabel id="role-label">Role</InputLabel>
+        <Select
+          labelId="role-label"
+          name="role"
+          value={userData.role}
           onChange={handleChange}
-          margin="normal"
-        />
-        <TextField
-          fullWidth
-          label="Email"
-          name="email"
-          value={userData.email}
+        >
+          <MenuItem value=""><em>Choose One</em></MenuItem>
+          <MenuItem value="Lead Generation">Lead Generation</MenuItem>
+          <MenuItem value="Telemarketer">Telemarketer</MenuItem>
+          <MenuItem value="Team Leader">Team Leader</MenuItem>
+        </Select>
+      </FormControl>
+      <TextField
+        fullWidth
+        label="Birthday"
+        type="date"
+        name="birthday"
+        value={userData.birthday}
+        onChange={handleChange}
+        margin="normal"
+        InputLabelProps={{ shrink: true }}
+      />
+      <TextField
+        fullWidth
+        label="Phone Number"
+        name="number"
+        value={userData.number}
+        onChange={handleChange}
+        margin="normal"
+      />
+      <TextField
+        fullWidth
+        label="Home Address"
+        name="homeaddress"
+        value={userData.homeaddress}
+        onChange={handleChange}
+        margin="normal"
+      />
+      <FormControl fullWidth margin="normal">
+        <InputLabel id="gender-label">Gender</InputLabel>
+        <Select
+          labelId="gender-label"
+          name="gender"
+          value={userData.gender}
           onChange={handleChange}
-          margin="normal"
-        />
-        <FormControl fullWidth margin="normal">
-          <InputLabel id="role-label">Role</InputLabel>
-          <Select
-            labelId="role-label"
-            name="role"
-            value={userData.role}
-            onChange={handleChange}
-          >
-            <MenuItem value=""><em>Choose One</em></MenuItem>
-            <MenuItem value="Lead Generation">Lead Generation</MenuItem>
-            <MenuItem value="Telemarketer">Telemarketer</MenuItem>
-            <MenuItem value="Team Leader">Team Leader</MenuItem>
-          </Select>
-        </FormControl>
-        <TextField
-          fullWidth
-          label="Birthday"
-          type="date"
-          name="birthday"
-          value={userData.birthday}
-          onChange={handleChange}
-          margin="normal"
-          InputLabelProps={{ shrink: true }}
-        />
-        <TextField
-          fullWidth
-          label="Phone Number"
-          name="number"
-          value={userData.number}
-          onChange={handleChange}
-          margin="normal"
-        />
-        <TextField
-          fullWidth
-          label="Home Address"
-          name="homeaddress"
-          value={userData.homeaddress}
-          onChange={handleChange}
-          margin="normal"
-        />
-        <FormControl fullWidth margin="normal">
-          <InputLabel id="gender-label">Gender</InputLabel>
-          <Select
-            labelId="gender-label"
-            name="gender"
-            value={userData.gender}
-            onChange={handleChange}
-          >
-            <MenuItem value=""><em>Choose One</em></MenuItem>
-            <MenuItem value="Male">Male</MenuItem>
-            <MenuItem value="Female">Female</MenuItem>
-          </Select>
-        </FormControl>
-        <Box mt={2}>
-          <Button variant="contained" type="submit" fullWidth>
-            {loading ? <CircularProgress size={24} /> : "Update Profile"}
-          </Button>
-        </Box>
-        {error && <div className="error">{error}</div>}
-      </form>
+        >
+          <MenuItem value=""><em>Choose One</em></MenuItem>
+          <MenuItem value="Male">Male</MenuItem>
+          <MenuItem value="Female">Female</MenuItem>
+        </Select>
+      </FormControl>
+      <Box mt={2}>
+        <Button variant="contained" type="submit" fullWidth disabled={loading}>
+          {loading ? <CircularProgress size={24} /> : "Update Profile"}
+        </Button>
+      </Box>
+      {error && <Typography color="error" mt={2}>{error}</Typography>}
       <Modal
         open={openSuccessModal}
         onClose={handleCloseSuccessModal}
@@ -192,7 +198,7 @@ const UpdateUserForm = ({ userId }) => {
           }}
         >
           <CheckCircleIcon sx={{ color: '#94e2cd', fontSize: 60 }} />
-          <div className="success">Update Successfully!</div>
+          <Typography variant="h6" component="div">Update Successfully!</Typography>
         </Box>
       </Modal>
     </Box>
