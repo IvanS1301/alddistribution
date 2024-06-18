@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react'
-import { useLeadsContext } from "../../hooks/useLeadsContext"
-import { useAuthContext } from "../../hooks/useAuthContext"
+import { useState, useEffect } from 'react';
+import { useLeadsContext } from "../../hooks/useLeadsContext";
+import { useAuthContext } from "../../hooks/useAuthContext";
 import { Box, Button, TextField, Select, MenuItem, FormControl, InputLabel, CircularProgress, Modal } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-const UpdateLeadForm = ({ leadId }) => {
-  const { leads, dispatch } = useLeadsContext()
-  const { userLG } = useAuthContext()
+const UpdateLeadForm = ({ leadId, onLeadUpdate }) => {
+  const { leads, dispatch } = useLeadsContext();
+  const { userLG } = useAuthContext();
 
   const [leadData, setLeadData] = useState({
     name: '',
@@ -16,14 +16,14 @@ const UpdateLeadForm = ({ leadId }) => {
     city: '',
     postcode: '',
     emailaddress: ''
-  })
+  });
   const [loading, setLoading] = useState(false); // State for loading indicator
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(null);
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
 
   useEffect(() => {
     // Fetch the lead details based on the ID
-    const lead = leads.find(lead => lead._id === leadId)
+    const lead = leads.find(lead => lead._id === leadId);
     if (lead) {
       setLeadData({
         name: lead.name || '',
@@ -33,20 +33,20 @@ const UpdateLeadForm = ({ leadId }) => {
         city: lead.city || '',
         postcode: lead.postcode || '',
         emailaddress: lead.emailaddress || ''
-      })
+      });
     }
-  }, [leadId, leads])
+  }, [leadId, leads]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setLeadData(prevData => ({
       ...prevData,
       [name]: value
-    }))
-  }
+    }));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     setLoading(true); // Start loading
 
     // Send the updated lead data to the backend for updating
@@ -57,22 +57,26 @@ const UpdateLeadForm = ({ leadId }) => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${userLG.token}`
       }
-    })
-    const json = await response.json()
+    });
+    const json = await response.json();
 
     setLoading(false); // Stop loading
 
     if (!response.ok) {
-      setError(json.error)
+      setError(json.error);
     }
     if (response.ok) {
-      setError(null)
-      setLeadData("")
+      setError(null);
       setOpenSuccessModal(true);
       // Update the lead in the local state
-      dispatch({ type: 'UPDATE_LEAD', payload: json })
+      dispatch({ type: 'UPDATE_LEAD', payload: json });
+      // Delay the execution of onLeadUpdate to show the modal first
+      setTimeout(() => {
+        setOpenSuccessModal(false);
+        onLeadUpdate();
+      }, 2000); // 2 seconds delay
     }
-  }
+  };
 
   const handleCloseSuccessModal = () => {
     setOpenSuccessModal(false);
@@ -203,8 +207,3 @@ const UpdateLeadForm = ({ leadId }) => {
 };
 
 export default UpdateLeadForm;
-
-
-
-
-
