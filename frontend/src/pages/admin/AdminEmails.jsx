@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { CircularProgress } from "@mui/material";
 
 // components
@@ -16,8 +16,8 @@ const AdminEmails = () => {
   const { userLG } = useAuthContext()
   const [loading, setLoading] = useState(true); // Initialize loading state
 
-  useEffect(() => {
-    const fetchEmails = async () => {
+  const fetchEmails = useCallback(async () => {
+    try {
       const response = await fetch('/api/emails/tl', {
         headers: { 'Authorization': `Bearer ${userLG.token}` },
       })
@@ -27,10 +27,15 @@ const AdminEmails = () => {
         dispatch({ type: 'SET_EMAILS', payload: json })
       }
       setLoading(false); // Set loading to false when data fetching is complete
+    } catch (error) {
+      console.error('Error fetching email:', error);
+      setLoading(false); // Set loading to false even in case of error
     }
+  }, [dispatch, userLG]);
 
-    fetchEmails()
-  }, [dispatch, userLG])
+  useEffect(() => {
+    fetchEmails();
+  }, [fetchEmails]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -45,6 +50,13 @@ const AdminEmails = () => {
     fetchUsers()
   }, [dispatchUsers])
 
+  // Function to handle lead update
+  const handleEmailDelete = useCallback(() => {
+    setLoading(true); // Set loading state to true to indicate data fetching
+    // Perform any necessary actions to update leads or refetch data
+    fetchEmails();
+  }, [fetchEmails]);
+
   return (
     <div className="flex">
       <AdminSidebar />
@@ -56,7 +68,7 @@ const AdminEmails = () => {
           ) : (
               <div className="flex flex-col w-full items-center overflow-y-hidden">
                 <div className="w-full">
-                  <EmailList emails={emails} userlgs={userlgs} />
+                  <EmailList emails={emails} userlgs={userlgs} onEmailDelete={handleEmailDelete} />
                 </div>
               </div>
             )}
