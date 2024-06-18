@@ -1,10 +1,10 @@
 import React from 'react'
 import UpdateLeadForm from '../../components/leadgen/UpdateLeadForm'
 
-const EditForm = ({ leadId }) => {
+const EditForm = ({ leadId, onLeadUpdate }) => {
     return (
         <div>
-            <UpdateLeadForm leadId={leadId}/>
+            <UpdateLeadForm leadId={leadId} onLeadUpdate={onLeadUpdate} />
         </div>
     );
 }
