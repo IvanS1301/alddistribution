@@ -36,12 +36,12 @@ const getUnassignedLeads = async (req, res) => {
             // Fetch new unassigned leads, limit to 10, and sort them
             unassignedLeads = await Lead.find({ assignedTo: { $exists: false } })
                 .limit(10)
-                .sort({ createdAt: -1 }) // Sort by createdAt field in descending order
+                .sort({ updatedAt: -1 }) // Sort by updatedAt field in descending order
                 .exec();
 
             // Assign fetched leads to the current Telemarketer
             await Promise.all(unassignedLeads.map(async (lead) => {
-                await Lead.findOneAndUpdate({ _id: lead._id }, { assignedTo: userLG_id })
+                await Lead.findOneAndUpdate({ _id: lead._id }, { assignedTo: userLG_id, Distributed: new Date() })
             }))
         }
 
