@@ -158,7 +158,7 @@ const DashboardTabs = ({ inventory, recentBookings }) => {
                 {/* ROW 1 */}
                 <Box
                     gridColumn="span 3"
-                    backgroundColor="#141b2d"
+                    backgroundColor="#0a2538"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
@@ -177,7 +177,7 @@ const DashboardTabs = ({ inventory, recentBookings }) => {
                 </Box>
                 <Box
                     gridColumn="span 3"
-                    backgroundColor="#141b2d"
+                    backgroundColor="#0a2538"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
@@ -196,7 +196,7 @@ const DashboardTabs = ({ inventory, recentBookings }) => {
                 </Box>
                 <Box
                     gridColumn="span 3"
-                    backgroundColor="#141b2d"
+                    backgroundColor="#0a2538"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
@@ -215,7 +215,7 @@ const DashboardTabs = ({ inventory, recentBookings }) => {
                 </Box>
                 <Box
                     gridColumn="span 3"
-                    backgroundColor="#141b2d"
+                    backgroundColor="#0a2538"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
@@ -315,7 +315,7 @@ const DashboardTabs = ({ inventory, recentBookings }) => {
                 {/* ROW 3 */}
                 <Box
                     gridColumn="span 3"
-                    backgroundColor="#141b2d"
+                    backgroundColor="#0a2538"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
@@ -334,7 +334,7 @@ const DashboardTabs = ({ inventory, recentBookings }) => {
                 </Box>
                 <Box
                     gridColumn="span 3"
-                    backgroundColor="#141b2d"
+                    backgroundColor="#0a2538"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
@@ -353,7 +353,7 @@ const DashboardTabs = ({ inventory, recentBookings }) => {
                 </Box>
                 <Box
                     gridColumn="span 3"
-                    backgroundColor="#141b2d"
+                    backgroundColor="#0a2538"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
@@ -398,15 +398,15 @@ const DashboardTabs = ({ inventory, recentBookings }) => {
                                 borderBottom={`4px solid #1F2A40`}
                                 p="25px"
                             >
-                                <Typography color="#e0e0e0">{type}</Typography>
-                                <Typography color="#e0e0e0">{count}</Typography>
+                                <Typography color="#e0e0e0" fontSize="18px">{type}</Typography>
+                                <Typography color="#4cceac" fontSize="18px">{count}</Typography>
                             </Box>
                         ))}
                 </Box>
 
                 <Box
                     gridColumn="span 3"
-                    backgroundColor="#141b2d"
+                    backgroundColor="#0a2538"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
@@ -425,7 +425,7 @@ const DashboardTabs = ({ inventory, recentBookings }) => {
                 </Box>
                 <Box
                     gridColumn="span 3"
-                    backgroundColor="#141b2d"
+                    backgroundColor="#0a2538"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
@@ -444,7 +444,7 @@ const DashboardTabs = ({ inventory, recentBookings }) => {
                 </Box>
                 <Box
                     gridColumn="span 3"
-                    backgroundColor="#141b2d"
+                    backgroundColor="#0a2538"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
@@ -463,7 +463,7 @@ const DashboardTabs = ({ inventory, recentBookings }) => {
                 </Box>
                 <Box
                     gridColumn="span 3"
-                    backgroundColor="#141b2d"
+                    backgroundColor="#0a2538"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
@@ -482,7 +482,7 @@ const DashboardTabs = ({ inventory, recentBookings }) => {
                 </Box>
                 <Box
                     gridColumn="span 3"
-                    backgroundColor="#141b2d"
+                    backgroundColor="#0a2538"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
@@ -501,7 +501,7 @@ const DashboardTabs = ({ inventory, recentBookings }) => {
                 </Box>
                 <Box
                     gridColumn="span 3"
-                    backgroundColor="#141b2d"
+                    backgroundColor="#0a2538"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
@@ -534,7 +534,7 @@ const DashboardTabs = ({ inventory, recentBookings }) => {
                     >
                         <Typography color="#e0e0e0" variant="h5" fontWeight="600">
                             Recent Bookings
-            </Typography>
+    </Typography>
                     </Box>
                     {recentBookings.map((booking) => (
                         <Box
@@ -545,18 +545,26 @@ const DashboardTabs = ({ inventory, recentBookings }) => {
                             borderBottom={`4px solid #1F2A40`}
                             p="15px"
                         >
-                            <Box>
-                                <Typography color="#e0e0e0">
+                            <Box flex={1}>
+                                <Typography color="#e0e0e0" fontSize="17px">
                                     {booking.telemarketerName}
                                 </Typography>
                             </Box>
-                            <Box color="#e0e0e0">{booking.leadName}</Box>
+                            <Box flex={2} color="#e0e0e0" fontSize="17px">{booking.leadName}</Box>
                             <Box
+                                flex={1}
                                 backgroundColor="#4cceac"
                                 p="5px 10px"
                                 borderRadius="4px"
+                                textAlign="center"
+                                maxWidth="100px" // Adjust the width as needed
                             >
                                 {booking.callDisposition}
+                            </Box>
+                            <Box flex={1} textAlign="right">
+                                <Typography color="#e0e0e0" variant="body2" fontSize="17px">
+                                    {moment(booking.createdAt).format('MMM D, YYYY h:mm A')}
+                                </Typography>
                             </Box>
                         </Box>
                     ))}
