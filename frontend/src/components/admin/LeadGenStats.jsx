@@ -45,6 +45,7 @@ const LeadGenStats = ({ leadGenStats }) => {
             headerName: "Leads Available",
             flex: 1,
             minWidth: 300,
+            cellClassName: "name-column--cell",
         },
     ];
 
@@ -63,7 +64,8 @@ const LeadGenStats = ({ leadGenStats }) => {
                     },
                     "& .MuiDataGrid-cell": {
                         borderBottom: "none",
-                        color: "#e0e0e0"
+                        color: "#e0e0e0",
+                        borderTop: "1px solid #525252",
                     },
                     "& .name-column--cell": {
                         color: "#94e2cd",
