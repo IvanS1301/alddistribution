@@ -8,6 +8,10 @@ export const emailsReducer = (state, action) => {
             return {
                 emails: action.payload
             }
+        case 'SET_EMAILS_AGENT':
+            return {
+                emails: action.payload
+            }
         case 'CREATE_EMAIL':
             return {
                 emails: [action.payload, ...state.emails]
