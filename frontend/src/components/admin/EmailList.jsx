@@ -1,14 +1,15 @@
 import { Box, Button, Snackbar, IconButton, Modal, CircularProgress } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { Delete } from '@mui/icons-material';
+import { Delete, Visibility } from '@mui/icons-material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import React, { useState } from 'react'
 import { useEmailsContext } from "../../hooks/useEmailsContext";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import Header from '../Chart/Header';
 import moment from 'moment'
+import ReadEmail from '../../pages/admin/ReadEmail';
 
-const EmailList = ({ emails, userlgs }) => {
+const EmailList = ({ emails, userlgs, onEmailDelete }) => {
     const { dispatch } = useEmailsContext();
     const { userLG } = useAuthContext();
     const [selectedRows, setSelectedRows] = useState([]);
@@ -18,6 +19,7 @@ const EmailList = ({ emails, userlgs }) => {
     const [showConfirmation, setShowConfirmation] = useState(false); // State for showing delete confirmation dialog
     const [snackbarOpen, setSnackbarOpen] = useState(false); // State for Snackbar open
     const [snackbarMessage, setSnackbarMessage] = useState(""); // State for Snackbar message
+    const [openViewModal, setOpenViewModal] = useState(false); // State for ViewLead modal
 
     const userIdToNameMap = userlgs.reduce((acc, user) => {
         acc[user._id] = user.name;
@@ -47,6 +49,7 @@ const EmailList = ({ emails, userlgs }) => {
                 dispatch({ type: "DELETE_EMAIL", payload: json });
                 setSnackbarMessage("Email Deleted Successfully!");
                 setSnackbarOpen(true);
+                onEmailDelete();
             }
         } catch (error) {
             setErrorDelete('Error deleting email.'); // Set delete error
@@ -63,6 +66,16 @@ const EmailList = ({ emails, userlgs }) => {
 
     const handleSnackbarClose = () => {
         setSnackbarOpen(false);
+    };
+
+    const handleOpenViewModal = (emailId) => {
+        setSelectedEmailId(emailId);
+        setOpenViewModal(true);
+    };
+
+    const handleCloseViewModal = () => {
+        setOpenViewModal(false);
+        setSelectedEmailId(null);
     };
 
     const iconButtonStyle = { color: "#e0e0e0" };
@@ -122,6 +135,7 @@ const EmailList = ({ emails, userlgs }) => {
             minWidth: 200,
             renderCell: (params) => (
                 <Box>
+                    <IconButton onClick={() => handleOpenViewModal(params.row._id)} style={iconButtonStyle}><Visibility /></IconButton>
                     <IconButton onClick={() => handleClick(params.row._id)} style={iconButtonStyle}><Delete /></IconButton>
                 </Box>
             )
@@ -143,7 +157,8 @@ const EmailList = ({ emails, userlgs }) => {
                     },
                     "& .MuiDataGrid-cell": {
                         borderBottom: "none",
-                        color: "#e0e0e0"
+                        color: "#e0e0e0",
+                        borderTop: "1px solid #525252",
                     },
                     "& .name-column--cell": {
                         color: "#94e2cd",
@@ -242,6 +257,28 @@ const EmailList = ({ emails, userlgs }) => {
                     <div>Are you sure you want to delete this email?</div>
                     <Button onClick={handleDeleteConfirmation}>Yes</Button>
                     <Button onClick={handleCloseConfirmation}>No</Button>
+                </Box>
+            </Modal>
+            <Modal
+                open={openViewModal}
+                onClose={handleCloseViewModal}
+                aria-labelledby="view-lead-modal-title"
+                aria-describedby="view-lead-modal-description"
+            >
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '80%',
+                        maxHeight: '80%',
+                        overflow: 'auto',
+
+
+                    }}
+                >
+                    {selectedEmailId && <ReadEmail emailId={selectedEmailId} />}
                 </Box>
             </Modal>
             <Snackbar
