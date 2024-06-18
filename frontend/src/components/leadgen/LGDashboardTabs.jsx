@@ -50,7 +50,7 @@ const LGDashboardTabs = ({ leadGenStats, leads }) => {
                 {/* ROW 1 */}
                 <Box
                     gridColumn="span 3"
-                    backgroundColor="#141b2d"
+                    backgroundColor="#0a2538"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
@@ -69,7 +69,7 @@ const LGDashboardTabs = ({ leadGenStats, leads }) => {
                 </Box>
                 <Box
                     gridColumn="span 3"
-                    backgroundColor="#141b2d"
+                    backgroundColor="#0a2538"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
@@ -88,7 +88,7 @@ const LGDashboardTabs = ({ leadGenStats, leads }) => {
                 </Box>
                 <Box
                     gridColumn="span 3"
-                    backgroundColor="#141b2d"
+                    backgroundColor="#0a2538"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
@@ -107,7 +107,7 @@ const LGDashboardTabs = ({ leadGenStats, leads }) => {
                 </Box>
                 <Box
                     gridColumn="span 3"
-                    backgroundColor="#141b2d"
+                    backgroundColor="#0a2538"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
@@ -129,7 +129,7 @@ const LGDashboardTabs = ({ leadGenStats, leads }) => {
                 <Box
                     gridColumn="span 8"
                     gridRow="span 4"
-                    backgroundColor="#141b2d"
+                    backgroundColor="#101624"
                     overflow="auto"
                 >
                     <Box
@@ -142,7 +142,7 @@ const LGDashboardTabs = ({ leadGenStats, leads }) => {
                     >
                         <Typography color="#e0e0e0" variant="h5" fontWeight="600">
                             Recent Leads
-        </Typography>
+    </Typography>
                     </Box>
                     {leads.map((lead) => (
                         <Box
@@ -153,27 +153,31 @@ const LGDashboardTabs = ({ leadGenStats, leads }) => {
                             borderBottom={`4px solid #1F2A40`}
                             p="15px"
                         >
-                            <Box flex="2">
-                                <Typography color="#e0e0e0" variant="body1">
+                            <Box flex="3">
+                                <Typography color="#e0e0e0" variant="body1" fontSize="17px">
                                     {lead.name}
                                 </Typography>
                             </Box>
-                            <Box flex="1">
-                                <Typography color="#e0e0e0" variant="body1">
+                            <Box flex="2">
+                                <Typography color="#e0e0e0" variant="body1" fontSize="17px">
                                     {lead.city}
                                 </Typography>
                             </Box>
                             <Box
-                                flex="1"
+                                flex={1}
                                 backgroundColor="#4cceac"
                                 p="5px 10px"
                                 borderRadius="4px"
-                                display="flex"
-                                justifyContent="center"
-                                alignItems="center"
+                                textAlign="center"
+                                maxWidth="100px" // Adjust the width as needed
                             >
                                 <Typography color="#141b2d" variant="body1">
                                     {lead.type}
+                                </Typography>
+                            </Box>
+                            <Box flex="2" textAlign="right">
+                                <Typography color="#e0e0e0" variant="body2" fontSize="17px">
+                                    {moment(lead.createdAt).format('MMM D, YYYY h:mm A')}
                                 </Typography>
                             </Box>
                         </Box>
@@ -182,7 +186,7 @@ const LGDashboardTabs = ({ leadGenStats, leads }) => {
                 <Box
                     gridColumn="span 4"
                     gridRow="span 4"
-                    backgroundColor="#141b2d"
+                    backgroundColor="#101624"
                     overflow="auto"
                 >
                     <Box
@@ -207,8 +211,8 @@ const LGDashboardTabs = ({ leadGenStats, leads }) => {
                                 borderBottom={`4px solid #1F2A40`}
                                 p="25px"
                             >
-                                <Typography color="#e0e0e0">{type}</Typography>
-                                <Typography color="#e0e0e0">{count}</Typography>
+                                <Typography color="#e0e0e0" fontSize="18px">{type}</Typography>
+                                <Typography color="#4cceac" fontSize="18px">{count}</Typography>
                             </Box>
                         ))}
                 </Box>
