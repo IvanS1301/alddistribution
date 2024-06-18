@@ -29,6 +29,42 @@ const bookedUnitsSchema = new Schema({
     assignedYesterday: {
         type: String,
         default: 0
+    },
+    leadTracked: {
+        type: String,
+        default: 0
+    },
+    assignedLeadStatus: { // Add this field
+        type: String,
+        default: 0
+    },
+    assignedLeadsAvailable: {
+        type: String,
+        default: 0
+    },
+    typesReceived: {
+        type: Map, // Use Map to store key-value pairs
+        of: Number, // Define the type of the values as Number
+        default: {} // Initialize with an empty object
+    },
+    typesReceivedDaily: {
+        type: Map, // Use Map to store key-value pairs
+        of: Number, // Define the type of the values as Number
+        default: {} // Initialize with an empty object
+    },
+    callDispositionCreated: {
+        type: Map, // Use Map to store key-value pairs
+        of: Number, // Define the type of the values as Number
+        default: {} // Initialize with an empty object
+    },
+    callDispositionDaily: {
+        type: Map,
+        of: Number,
+        default: {}
+    },
+    emailsSent: { // Add this field
+        type: String,
+        default: 0
     }
 }, { timestamps: true });
 
