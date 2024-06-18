@@ -31,8 +31,6 @@ const signupUserLG = async (req, res) => {
 
   try {
     const userLG = await UserLG.signup(name, email, password, role, birthday, number, homeaddress, gender)
-    userLG.isActive = true // Mark user as active
-    await userLG.save() // Save the updated user status
 
     // Update inventory
     await updateInventoryCounts()
