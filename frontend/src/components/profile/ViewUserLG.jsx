@@ -21,7 +21,7 @@ const ViewUserLG = () => {
     const userlg = userlgs.find(userlg => userlg._id === id);
 
     if (!userlg) {
-        return <div>Loading...</div>;
+        return <Typography>User not found</Typography>; // Or any other appropriate handling
     }
 
     const formattedBirthday = userlg.birthday ? moment(userlg.birthday).format('YYYY-MM-DD') : '';
@@ -36,7 +36,7 @@ const ViewUserLG = () => {
 
     return (
         <Container>
-            <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+            <Box display="flex" justifyContent="center" alignItems="center" minHeight="90vh">
                 <Paper elevation={3} sx={{ padding: '50px', borderRadius: 6, boxShadow: '1px 1px 8px rgba(0, 0, 0, 0.065)', backgroundColor: '#101624', maxWidth: '500px', width: '100%' }}>
                     <Box display="flex" flexDirection="column" alignItems="center">
                         <Box mb={4}>
