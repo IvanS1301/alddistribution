@@ -26,14 +26,14 @@ const Bookings = ({ recentBookings }) => {
             field: "callDisposition",
             headerName: "Call Disposition",
             flex: 1,
-            minWidth: 450,
+            minWidth: 400,
             cellClassName: "name-column--cell",
         },
         {
             field: "telemarketerName",
             headerName: "Booked By",
             flex: 1,
-            minWidth: 380,
+            minWidth: 300,
         },
         {
             field: "createdAt",
@@ -41,7 +41,7 @@ const Bookings = ({ recentBookings }) => {
             flex: 1,
             minWidth: 200,
             renderCell: (params) =>
-                moment(params.row.createdAt).startOf('hour').fromNow()
+                moment(params.row.createdAt).format('MMM-D-YYYY h:mm:ss a')
         },
     ];
 
@@ -60,7 +60,8 @@ const Bookings = ({ recentBookings }) => {
                     },
                     "& .MuiDataGrid-cell": {
                         borderBottom: "none",
-                        color: "#e0e0e0"
+                        color: "#e0e0e0",
+                        borderTop: "1px solid #525252",
                     },
                     "& .name-column--cell": {
                         color: "#94e2cd",
