@@ -11,7 +11,7 @@ const BookedUnits = ({ bookedUnits }) => {
             field: "_id",
             headerName: "ID",
             flex: 1,
-            minWidth: 400,
+            minWidth: 350,
             renderCell: (params) => params.value.slice(20, 26)
         },
         {
@@ -38,6 +38,7 @@ const BookedUnits = ({ bookedUnits }) => {
             headerName: "All Time",
             flex: 1,
             minWidth: 300,
+            cellClassName: "name-column--cell",
         },
     ];
 
@@ -56,7 +57,8 @@ const BookedUnits = ({ bookedUnits }) => {
                     },
                     "& .MuiDataGrid-cell": {
                         borderBottom: "none",
-                        color: "#e0e0e0"
+                        color: "#e0e0e0",
+                        borderTop: "1px solid #444",
                     },
                     "& .name-column--cell": {
                         color: "#94e2cd",
