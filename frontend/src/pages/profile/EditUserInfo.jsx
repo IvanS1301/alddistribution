@@ -1,10 +1,10 @@
 import React from 'react'
 import UpdateUserForm from '../../components/profile/UpdateUserForm'
 
-const EditUserInfo = ({ userId }) => {
+const EditUserInfo = ({ userId, onUserUpdate }) => {
     return (
         <div className="EditForm">
-            <UpdateUserForm userId={userId} />
+            <UpdateUserForm userId={userId} onUserUpdate={onUserUpdate} />
         </div>
     );
 }
