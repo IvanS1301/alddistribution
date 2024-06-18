@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLeadsContext } from "../../hooks/useLeadsContext";
 import { Container, Typography, Box, Paper, Grid } from '@mui/material';
+import moment from 'moment';
 
 const ViewLead = ({ leadId }) => {
   const { tlLeads } = useLeadsContext();
@@ -11,6 +12,11 @@ const ViewLead = ({ leadId }) => {
   if (!lead) {
     return <div>Loading...</div>;
   }
+
+  // Format the createdAt and updatedAt date using moment.js
+  const formattedCreatedAt = moment(lead.createdAt).format('MMM-D-YYYY h:mm:ss a');
+  const formattedUpdatedAt = moment(lead.updatedAt).format('MMM-D-YYYY h:mm:ss a');
+  const formattedDistributed = moment(lead.Distributed).format('MMM-D-YYYY h:mm:ss a');
 
   return (
     <Container>
@@ -46,6 +52,14 @@ const ViewLead = ({ leadId }) => {
             <Typography variant="body1" component="p" fontSize="20px" style={{ color: 'white' }}>{lead.emailaddress}</Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
+            <Typography variant="body1" component="p" fontSize="20px" style={{ color: '#94e2cd' }}><strong>Lead Gen Date: </strong></Typography>
+            <Typography variant="body1" component="p" fontSize="20px" style={{ color: 'white' }}>{formattedCreatedAt}</Typography>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Typography variant="body1" component="p" fontSize="20px" style={{ color: '#94e2cd' }}><strong>Distributed: </strong></Typography>
+            <Typography variant="body1" component="p" fontSize="20px" style={{ color: 'white' }}>{formattedDistributed}</Typography>
+          </Grid>
+          <Grid item xs={12} sm={6}>
             <Typography variant="body1" component="p" fontSize="20px" style={{ color: '#94e2cd' }}><strong>Call Disposition: </strong></Typography>
             <Typography variant="body1" component="p" fontSize="20px" style={{ color: 'white' }}>{lead.callDisposition}</Typography>
           </Grid>
@@ -56,6 +70,12 @@ const ViewLead = ({ leadId }) => {
           <Grid item xs={12} sm={6}>
             <Typography variant="body1" component="p" fontSize="20px" style={{ color: '#94e2cd' }}><strong>Assigned To: </strong></Typography>
             <Typography variant="body1" component="p" fontSize="20px" style={{ color: 'white' }}>{lead.assignedTo}</Typography>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Typography variant="body1" component="p" fontSize="20px" style={{ color: '#94e2cd' }}><strong>Last Touch: </strong></Typography>
+            {lead.callDisposition && (
+              <Typography variant="body1" component="p" fontSize="20px" style={{ color: 'white' }}>{formattedUpdatedAt}</Typography>
+            )}
           </Grid>
         </Grid>
         {/* Logo and company name */}
