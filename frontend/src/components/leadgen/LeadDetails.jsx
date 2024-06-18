@@ -1,39 +1,22 @@
-import { Box, IconButton, Modal, CircularProgress, Button, Snackbar } from "@mui/material";
+import { Box, IconButton, Modal } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import React, { useState } from 'react';
-import { Delete, Visibility, Edit } from '@mui/icons-material';
-import { useLeadsContext } from "../../hooks/useLeadsContext";
-import { useAuthContext } from "../../hooks/useAuthContext";
+import { Visibility, Edit } from '@mui/icons-material';
 import Header from '../Chart/Header';
 import moment from 'moment';
 import EditForm from '../../pages/leadgen/EditForm';
 import ReadForm from '../../pages/leadgen/ReadForm';
 
-const LeadDetails = ({ leads, userlgs }) => {
-  const { dispatch } = useLeadsContext();
-  const { userLG } = useAuthContext();
+const LeadDetails = ({ leads, userlgs, onLeadUpdate }) => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [openAssignModal, setOpenAssignModal] = useState(false);
   const [selectedLeadId, setSelectedLeadId] = useState(null);
-  const [loadingDelete, setLoadingDelete] = useState(false); // State for delete loading
-  const [errorDelete, setErrorDelete] = useState(null); // State for delete error
-  const [showConfirmation, setShowConfirmation] = useState(false); // State for showing delete confirmation dialog
-  const [snackbarOpen, setSnackbarOpen] = useState(false); // State for Snackbar open
-  const [snackbarMessage, setSnackbarMessage] = useState(""); // State for Snackbar message
   const [openViewModal, setOpenViewModal] = useState(false); // State for ViewLead modal
 
   const userIdToNameMap = userlgs.reduce((acc, user) => {
     acc[user._id] = user.name;
     return acc;
   }, {});
-
-  const handleClick = async (leadId) => {
-    if (!userLG) {
-      return;
-    }
-    setSelectedLeadId(leadId);
-    setShowConfirmation(true);
-  };
 
   const handleOpenAssignModal = (leadId) => {
     setSelectedLeadId(leadId);
@@ -43,39 +26,6 @@ const LeadDetails = ({ leads, userlgs }) => {
   const handleCloseAssignModal = () => {
     setOpenAssignModal(false);
     setSelectedLeadId(null);
-  };
-
-  const handleDeleteConfirmation = async () => {
-    try {
-      setLoadingDelete(true); // Start delete loading
-      const response = await fetch(`/api/leads/${selectedLeadId}`, {
-        method: "DELETE",
-        headers: {
-          'Authorization': `Bearer ${userLG.token}`
-        }
-      });
-      const json = await response.json();
-
-      if (response.ok) {
-        dispatch({ type: "DELETE_LEAD", payload: json });
-        setSnackbarMessage("Lead Deleted Successfully!");
-        setSnackbarOpen(true);
-      }
-    } catch (error) {
-      setErrorDelete('Error deleting lead.'); // Set delete error
-      console.error('Error deleting lead:', error);
-    } finally {
-      setLoadingDelete(false); // Stop delete loading
-      setShowConfirmation(false); // Close confirmation dialog
-    }
-  };
-
-  const handleCloseConfirmation = () => {
-    setShowConfirmation(false); // Close confirmation dialog
-  };
-
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
   };
 
   const handleOpenViewModal = (leadId) => {
@@ -130,6 +80,7 @@ const LeadDetails = ({ leads, userlgs }) => {
       flex: 1,
       minWidth: 180,
       renderCell: (params) => userIdToNameMap[params.value] || params.value,
+      cellClassName: "name-column--cell",
     },
     {
       field: "createdAt",
@@ -147,7 +98,6 @@ const LeadDetails = ({ leads, userlgs }) => {
       renderCell: (params) => (
         <Box>
           <IconButton onClick={() => handleOpenViewModal(params.row._id)} style={iconButtonStyle}><Visibility /></IconButton>
-          <IconButton onClick={() => handleClick(params.row._id)} style={iconButtonStyle}><Delete /></IconButton>
           <IconButton onClick={() => handleOpenAssignModal(params.row._id)} style={iconButtonStyle}><Edit /></IconButton>
         </Box>
       )
@@ -237,59 +187,7 @@ const LeadDetails = ({ leads, userlgs }) => {
             p: 4,
           }}
         >
-          <EditForm leadId={selectedLeadId} />
-        </Box>
-      </Modal>
-      <Modal
-        open={loadingDelete}
-        onClose={() => setLoadingDelete(false)}
-        aria-labelledby="delete-lead-modal-title"
-        aria-describedby="delete-lead-modal-description"
-      >
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 400,
-            bgcolor: 'background.paper',
-            border: '2px solid #000',
-            boxShadow: 24,
-            p: 4,
-            textAlign: 'center',
-          }}
-        >
-          {loadingDelete ? (
-            <CircularProgress /> // Show CircularProgress while deleting
-          ) : (
-              <div>{errorDelete || 'Lead Deleted Successfully!'}</div> // Show error or success message
-            )}
-        </Box>
-      </Modal>
-      <Modal
-        open={showConfirmation}
-        onClose={handleCloseConfirmation}
-        aria-labelledby="delete-confirmation-modal-title"
-        aria-describedby="delete-confirmation-modal-description"
-      >
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 400,
-            bgcolor: 'background.paper',
-            border: '2px solid #000',
-            boxShadow: 24,
-            p: 4,
-            textAlign: 'center',
-          }}
-        >
-          <div>Are you sure you want to delete this lead?</div>
-          <Button onClick={handleDeleteConfirmation}>Yes</Button>
-          <Button onClick={handleCloseConfirmation}>No</Button>
+          {selectedLeadId && <EditForm leadId={selectedLeadId} onLeadUpdate={onLeadUpdate} />}
         </Box>
       </Modal>
       <Modal
@@ -314,16 +212,6 @@ const LeadDetails = ({ leads, userlgs }) => {
           {selectedLeadId && <ReadForm leadId={selectedLeadId} />}
         </Box>
       </Modal>
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-        message={snackbarMessage}
-      />
     </Box>
   );
 };
