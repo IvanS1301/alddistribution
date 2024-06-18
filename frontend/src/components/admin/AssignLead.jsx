@@ -6,7 +6,7 @@ import { CircularProgress } from "@mui/material";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Modal from '@mui/material/Modal';
 
-const AssignLead = ({ userlgs, leadId }) => {
+const AssignLead = ({ userlgs, leadId, onLeadUpdate }) => {
   const { tlLeads, dispatch } = useLeadsContext()
   const { userLG } = useAuthContext()
 
@@ -61,6 +61,11 @@ const AssignLead = ({ userlgs, leadId }) => {
       setOpenSuccessModal(true);
       // Update the lead in the local state
       dispatch({ type: 'UPDATE_TL_LEAD', payload: json })
+      // Delay the execution of onUserUpdate to show the modal first
+      setTimeout(() => {
+        setOpenSuccessModal(false);
+        onLeadUpdate();
+      }, 2000); // 2 seconds delay
     }
   }
 
