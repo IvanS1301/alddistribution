@@ -11,7 +11,7 @@ import moment from 'moment';
 import AssignPage from '../../pages/admin/AssignPage';
 import ReadLead from '../../pages/admin/ReadLead';
 
-const LeadList = ({ tlLeads, userlgs }) => {
+const LeadList = ({ tlLeads, userlgs, onLeadUpdate }) => {
   const { dispatch } = useLeadsContext();
   const { userLG } = useAuthContext();
   const [selectedRows, setSelectedRows] = useState([]);
@@ -62,6 +62,7 @@ const LeadList = ({ tlLeads, userlgs }) => {
         dispatch({ type: "DELETE_TL_LEAD", payload: json });
         setSnackbarMessage("Lead Deleted Successfully!");
         setSnackbarOpen(true);
+        onLeadUpdate();
       }
     } catch (error) {
       setErrorDelete('Error deleting lead.'); // Set delete error
@@ -104,7 +105,7 @@ const LeadList = ({ tlLeads, userlgs }) => {
       field: "name",
       headerName: "Name",
       flex: 1,
-      minWidth: 280,
+      minWidth: 230,
       cellClassName: "name-column--cell",
     },
     {
@@ -117,14 +118,15 @@ const LeadList = ({ tlLeads, userlgs }) => {
       field: "emailaddress",
       headerName: "Email",
       flex: 1,
-      minWidth: 290,
+      minWidth: 250,
     },
     {
       field: "userLG_id",
       headerName: "Lead By",
       flex: 1,
-      minWidth: 180,
+      minWidth: 160,
       renderCell: (params) => userIdToNameMap[params.value] || params.value,
+      cellClassName: "name-column--cell",
     },
     {
       field: "callDisposition",
@@ -136,8 +138,9 @@ const LeadList = ({ tlLeads, userlgs }) => {
       field: "assignedTo",
       headerName: "Assigned To",
       flex: 1,
-      minWidth: 180,
+      minWidth: 150,
       renderCell: (params) => userIdToNameMap[params.value] || params.value,
+      cellClassName: "name-column--cell",
     },
     {
       field: "createdAt",
@@ -148,18 +151,28 @@ const LeadList = ({ tlLeads, userlgs }) => {
         moment(params.row.createdAt).format('MMM-D-YYYY'),
     },
     {
-      field: "updatedAt",
+      field: "Distributed",
       headerName: "Distributed",
       flex: 1,
       minWidth: 150,
       renderCell: (params) =>
-        moment(params.row.updatedAt).startOf('hour').fromNow(),
+        moment(params.row.Distributed).format('MMM-D-YYYY'),
+    },
+    {
+      field: "updatedAt",
+      headerName: "Last Touch",
+      flex: 1,
+      minWidth: 150,
+      renderCell: (params) => {
+        const callDisposition = params.row.callDisposition;
+        return callDisposition ? moment(params.row.updatedAt).startOf('minute').fromNow() : '';
+      }
     },
     {
       field: "actions",
       headerName: "Actions",
       flex: 1,
-      minWidth: 200,
+      minWidth: 190,
       renderCell: (params) => (
         <Box>
           <IconButton onClick={() => handleOpenViewModal(params.row._id)} style={iconButtonStyle}><Visibility /></IconButton>
@@ -186,6 +199,7 @@ const LeadList = ({ tlLeads, userlgs }) => {
           "& .MuiDataGrid-cell": {
             borderBottom: "none",
             color: "#e0e0e0",
+            borderTop: "1px solid #525252",
           },
           "& .name-column--cell": {
             color: "#94e2cd",
@@ -253,7 +267,7 @@ const LeadList = ({ tlLeads, userlgs }) => {
             p: 4,
           }}
         >
-          <AssignPage leadId={selectedLeadId} />
+          {selectedLeadId && <AssignPage leadId={selectedLeadId} onLeadUpdate={onLeadUpdate} />}
         </Box>
       </Modal>
       <Modal
