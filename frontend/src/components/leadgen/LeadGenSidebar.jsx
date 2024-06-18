@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Link, useLocation } from "react-router-dom";
 import { HomeOutlined, ContactsOutlined } from "@mui/icons-material";
-import AnalyticsIcon from '@mui/icons-material/Analytics';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
@@ -45,9 +44,6 @@ const LeadGenSidebar = () => {
                 break;
             case "/LeadGenAdd":
                 setSelected("Add New Lead");
-                break;
-            case "/LeadGenStats":
-                setSelected("Analytics");
                 break;
             case `/viewuser/${userLG._id}`:
                 setSelected("Profile");
@@ -169,16 +165,9 @@ const LeadGenSidebar = () => {
 
                 {!isCollapsed && (
                     <div className="text-[#a3a3a3] m-3 ml-7">
-                        <Typography sx={{ fontSize: '14px', m: "15px 0 5px 20px" }}>Pages</Typography>
+                        <Typography sx={{ fontSize: '14px', m: "15px 0 5px 20px" }}>Personal Info</Typography>
                     </div>
                 )}
-                <Item
-                    title="Analytics"
-                    to="/LeadGenStats"
-                    icon={<AnalyticsIcon />}
-                    selected={selected}
-                    setSelected={setSelected}
-                />
                 <Item
                     title="Profile"
                     to={`/viewuser/${userLG._id}`}
