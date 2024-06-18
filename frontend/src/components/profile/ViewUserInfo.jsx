@@ -15,11 +15,15 @@ const ViewUserInfo = ({ userId }) => {
     // Find the userlg with the specified ID
     const userlg = userlgs.find(userlg => userlg._id === userId);
 
-    const formattedBirthday = moment(userlg.birthday).format('MMMM Do, YYYY');
+    if (!userlg) {
+        return <Typography>User not found</Typography>; // Or any other appropriate handling
+    }
+
+    const formattedBirthday = userlg && userlg.birthday ? moment(userlg.birthday).format('YYYY-MM-DD') : '';
 
     return (
         <Container>
-            <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+            <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
                 <Paper elevation={3} sx={{ padding: '50px', borderRadius: 6, boxShadow: '1px 1px 8px rgba(0, 0, 0, 0.065)', backgroundColor: '#101624', maxWidth: '500px', width: '100%' }}>
                     <Box display="flex" flexDirection="column" alignItems="center">
                         <Box mb={4}>
