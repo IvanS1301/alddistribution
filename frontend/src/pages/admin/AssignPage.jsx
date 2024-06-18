@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import AssignLead from '../../components/admin/AssignLead';
 import { useUsersContext } from '../../hooks/useUsersContext';
 
-const AssignPage = ({ leadId }) => {
+const AssignPage = ({ leadId, onLeadUpdate }) => {
     const { userlgs, dispatch: userDispatch } = useUsersContext();
 
     useEffect(() => {
@@ -23,6 +23,7 @@ const AssignPage = ({ leadId }) => {
             <AssignLead
                 userlgs={userlgs}
                 leadId={leadId}  // Pass the leadId prop to AssignLead
+                onLeadUpdate={onLeadUpdate}
             />
         </div>
     );
