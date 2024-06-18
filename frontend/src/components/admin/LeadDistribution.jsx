@@ -11,33 +11,46 @@ const LeadDistribution = ({ bookedUnits }) => {
             field: "_id",
             headerName: "ID",
             flex: 1,
-            minWidth: 400,
+            minWidth: 150,
             renderCell: (params) => params.value.slice(20, 26)
         },
         {
             field: "telemarketerName",
             headerName: "Telemarketer",
             flex: 1,
-            minWidth: 400,
+            minWidth: 250,
             cellClassName: "name-column--cell",
         },
         {
             field: "assignedDaily",
             headerName: "Assigned Leads Daily",
             flex: 1,
-            minWidth: 400,
+            minWidth: 250,
         },
         {
             field: "assignedYesterday",
             headerName: "Assigned Lead Yesterday",
             flex: 1,
-            minWidth: 400,
+            minWidth: 300,
+        },
+        {
+            field: "assignedLeadStatus",
+            headerName: "Assigned Lead Status",
+            flex: 1,
+            minWidth: 300,
+        },
+        {
+            field: "assignedLeadsAvailable",
+            headerName: "Assigned Leads Available",
+            flex: 1,
+            minWidth: 300,
         },
         {
             field: "totalAssignedLeads",
             headerName: "Total Assigned Leads",
             flex: 1,
             minWidth: 300,
+            cellClassName: "name-column--cell",
         },
     ];
 
@@ -56,7 +69,8 @@ const LeadDistribution = ({ bookedUnits }) => {
                     },
                     "& .MuiDataGrid-cell": {
                         borderBottom: "none",
-                        color: "#e0e0e0"
+                        color: "#e0e0e0",
+                        borderTop: "1px solid #525252",
                     },
                     "& .name-column--cell": {
                         color: "#94e2cd",
