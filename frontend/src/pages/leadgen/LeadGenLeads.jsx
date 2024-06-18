@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { CircularProgress } from "@mui/material";
 
 // components
@@ -16,8 +16,8 @@ const LeadGenLeads = () => {
   const { userLG } = useAuthContext()
   const [loading, setLoading] = useState(true); // Initialize loading state
 
-  useEffect(() => {
-    const fetchLeads = async () => {
+  const fetchLeads = useCallback(async () => {
+    try {
       const response = await fetch('/api/leads', {
         headers: { 'Authorization': `Bearer ${userLG.token}` },
       })
@@ -27,10 +27,22 @@ const LeadGenLeads = () => {
         dispatch({ type: 'SET_LEADS', payload: json })
       }
       setLoading(false); // Set loading to false when data fetching is complete
+    } catch (error) {
+      console.error('Error fetching leads:', error);
+      setLoading(false); // Set loading to false even in case of error
     }
+  }, [dispatch, userLG]);
 
-    fetchLeads()
-  }, [dispatch, userLG])
+  useEffect(() => {
+    fetchLeads();
+  }, [fetchLeads]);
+
+  // Function to handle lead update
+  const handleLeadUpdate = useCallback(() => {
+    setLoading(true); // Set loading state to true to indicate data fetching
+    // Perform any necessary actions to update leads or refetch data
+    fetchLeads();
+  }, [fetchLeads]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -56,7 +68,7 @@ const LeadGenLeads = () => {
           ) : (
               <div className="flex flex-col w-full items-center overflow-y-hidden">
                 <div className="w-full">
-                  <LeadDetails leads={leads} userlgs={userlgs} />
+                  <LeadDetails leads={leads} userlgs={userlgs} onLeadUpdate={handleLeadUpdate} />
                 </div>
               </div>
             )}
